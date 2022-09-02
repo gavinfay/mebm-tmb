@@ -36,7 +36,7 @@ model <- MakeADFun(data = data,
                    parameters = parameters,
                    #map = list(b0=factor(NA)),
                    DLL="linear_regression")
-                  #control=list(eval.max=10000,iter.max=1000,rel.tol=1e-15),silent=T)
+#control=list(eval.max=10000,iter.max=1000,rel.tol=1e-15),silent=T)
 
 # look at the built model
 print(attributes(model))
@@ -48,10 +48,6 @@ fit
 rep <- sdreport(model)
 rep
 
-set.seed(3)
-bob <- sapply(1:10,function(x)model$simulate(complete=TRUE))
-bob[,1]$y
-bob[,2]$y
 # Sumamrize ALL
 print(summary(rep,p.value=T))
 
@@ -66,12 +62,22 @@ ggplot(data) +
 
 
 
+#Use of the SIMULATE function
+# uncomment out the SIMULATE section of the code then re-compile
+compile("linear_regression.cpp")
+dyn.load(dynlib("linear_regression"))
+# make the TMB model
 model <- MakeADFun(data = data, 
                    parameters = parameters,
-                   #map = list(b0=factor(NA)),
                    DLL="linear_regression")
+fit <- nlminb(model$par, model$fn, model$gr)
 
-model$simulate()
+#generate 10 simulated data sets based on the estimated parameters
+sim_data <- sapply(1:10,function(x)model$simulate(complete=TRUE))
+sim_data[,1]$y
+sim_data[,2]$y
+
+
 
 
 ### TMB with STAN

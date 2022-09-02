@@ -16,21 +16,21 @@ Type objective_function<Type>::operator() ()
   PARAMETER(logSigma);    //model parameter to be estimated, real number
   
   vector<Type> ypred(n);   //object that will contain our model predictions
-                           // note this is a function of model parameters, 
-                           // therefore needs to be differntiable
-                           // we also specify the size of the vector
-                           
+  // note this is a function of model parameters, 
+  // therefore needs to be differntiable
+  // we also specify the size of the vector
+  
   Type neglogL = 0.0;    //objective function value. Initialize to 0.
   
   // specify the model & objective function
-
+  
   ypred = b0 + b1*x;    // model predictions
   
   neglogL = -sum(dnorm(y, ypred, exp(logSigma), true));  //objective function value
-  SIMULATE {
-    y = rnorm(ypred,exp(logSigma));
-    REPORT(y);
-  }
+  // SIMULATE {
+  //   y = rnorm(ypred,exp(logSigma));
+  //   REPORT(y);
+  // }
   
   
   Type sigma2 = square(exp(logSigma));
